@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { Instagram, Twitter, Facebook, Youtube, MapPin, Phone, Mail } from "lucide-react";
 
 const footerLinks = {

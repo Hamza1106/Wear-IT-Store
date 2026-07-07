@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { useCart } from "@/context/CartContext";
