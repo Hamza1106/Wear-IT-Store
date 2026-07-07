@@ -54,8 +54,7 @@ const categoryDescriptions = {
   accessories: "Complete your look with our high-quality bags, caps, socks, and more.",
 };
 
-const CategoryPage = () => {
-  const { category } = useParams();
+const CategoryPage = ({ category }) => {
   const products = categoryProducts[category] || [];
   const title = categoryTitles[category] || "Products";
   const description = categoryDescriptions[category] || "";
