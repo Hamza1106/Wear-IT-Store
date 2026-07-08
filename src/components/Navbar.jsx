@@ -177,12 +177,24 @@ const Navbar = () => {
 
             {/* Right Icons */}
             <div className="flex items-center gap-2 md:gap-4">
-              {/* Search Button */}
+              {/* Search Button (opens global command palette) */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.dispatchEvent(new Event("velocity:open-search"))}
+                className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full border border-border bg-secondary/50 hover:border-primary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Search className="w-4 h-4" />
+                <span className="text-xs">Search</span>
+                <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 rounded bg-background border border-border">
+                  ⌘K
+                </kbd>
+              </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setIsSearchOpen(true)}
-                className="p-2 text-foreground/80 hover:text-foreground transition-colors"
+                onClick={() => window.dispatchEvent(new Event("velocity:open-search"))}
+                className="md:hidden p-2 text-foreground/80 hover:text-foreground transition-colors"
               >
                 <Search className="w-5 h-5" />
               </motion.button>
