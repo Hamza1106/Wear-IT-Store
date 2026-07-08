@@ -15,6 +15,9 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import { Toaster } from "@/components/ui/sonner";
+import SmoothScroll from "@/components/SmoothScroll";
+import CustomCursor from "@/components/CustomCursor";
+import SearchCommand from "@/components/SearchCommand";
 
 function NotFoundComponent() {
   return (
@@ -139,8 +142,12 @@ function RootComponent() {
       <TooltipProvider>
         <AuthProvider>
           <CartProvider>
-            <Toaster />
-            <Outlet />
+            <SmoothScroll>
+              <CustomCursor />
+              <SearchCommand />
+              <Toaster />
+              <Outlet />
+            </SmoothScroll>
           </CartProvider>
         </AuthProvider>
       </TooltipProvider>
