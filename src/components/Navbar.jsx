@@ -177,12 +177,24 @@ const Navbar = () => {
 
             {/* Right Icons */}
             <div className="flex items-center gap-2 md:gap-4">
-              {/* Search Button */}
+              {/* Search Button (opens global command palette) */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.dispatchEvent(new Event("velocity:open-search"))}
+                className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full border border-border bg-secondary/50 hover:border-primary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Search className="w-4 h-4" />
+                <span className="text-xs">Search</span>
+                <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 rounded bg-background border border-border">
+                  ⌘K
+                </kbd>
+              </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setIsSearchOpen(true)}
-                className="p-2 text-foreground/80 hover:text-foreground transition-colors"
+                onClick={() => window.dispatchEvent(new Event("velocity:open-search"))}
+                className="md:hidden p-2 text-foreground/80 hover:text-foreground transition-colors"
               >
                 <Search className="w-5 h-5" />
               </motion.button>
@@ -324,123 +336,6 @@ const Navbar = () => {
         </AnimatePresence>
       </motion.nav>
 
-      {/* Search Overlay */}
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-lg"
-          >
-            <div className="container mx-auto px-4 pt-24">
-              {/* Close Button */}
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                onClick={() => {
-                  setIsSearchOpen(false);
-                  setSearchQuery("");
-                }}
-                className="absolute top-6 right-6 p-3 rounded-full bg-secondary hover:bg-muted transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </motion.button>
-
-              {/* Search Form */}
-              <motion.form
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 30 }}
-                transition={{ delay: 0.1 }}
-                onSubmit={handleSearchSubmit}
-                className="max-w-3xl mx-auto"
-              >
-                <div className="relative">
-                  <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground" />
-                  <motion.input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products..."
-                    className="w-full py-6 pl-16 pr-6 text-2xl bg-secondary/50 border-2 border-border rounded-2xl focus:border-primary focus:outline-none transition-all duration-300 placeholder:text-muted-foreground"
-                    initial={{ scale: 0.95 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  />
-                </div>
-              </motion.form>
-
-              {/* Search Results */}
-              <AnimatePresence>
-                {searchResults.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    className="max-w-3xl mx-auto mt-6"
-                  >
-                    <p className="text-muted-foreground text-sm mb-4">
-                      {searchResults.length} result{searchResults.length > 1 ? "s" : ""} found
-                    </p>
-                    <div className="bg-card border border-border rounded-2xl overflow-hidden">
-                      {searchResults.map((result, index) => (
-                        <motion.button
-                          key={result.name}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          onClick={() => handleResultClick(result.href)}
-                          className="w-full flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors border-b border-border last:border-b-0 text-left"
-                        >
-                          <div>
-                            <p className="font-medium text-foreground">{result.name}</p>
-                            <p className="text-sm text-muted-foreground">{result.category}</p>
-                          </div>
-                          <span className="text-primary">→</span>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Quick Links */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="max-w-3xl mx-auto mt-8"
-              >
-                <p className="text-muted-foreground text-sm mb-4">Quick Links</p>
-                <div className="flex flex-wrap gap-3">
-                  {navItems.map((item) => (
-                    <motion.button
-                      key={item.label}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleResultClick(item.href)}
-                      className="px-4 py-2 bg-secondary rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors"
-                    >
-                      {item.label}
-                    </motion.button>
-                  ))}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleResultClick("/products")}
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
-                  >
-                    All Products
-                  </motion.button>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Cart Drawer */}
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
