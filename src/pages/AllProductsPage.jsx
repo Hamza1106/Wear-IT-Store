@@ -37,16 +37,40 @@ const allProducts = [
   { id: 16, name: "Sport Water Bottle", price: 35, image: product6, rating: 4.9, reviews: 445, category: "Accessories" },
 ];
 
+const BRANDS = ["Nike", "Adidas", "Puma", "Under Armour", "New Balance"];
+const SIZES = ["XS", "S", "M", "L", "XL"];
+const COLORS = [
+  { name: "Black", hex: "#0f0f0f" },
+  { name: "Orange", hex: "#ff6a2b" },
+  { name: "Cyan", hex: "#22d3ee" },
+  { name: "White", hex: "#f5f5f5" },
+  { name: "Olive", hex: "#5c6a3a" },
+];
+const PRICES = ["Under $50", "$50 – $100", "$100 – $200", "$200+"];
+
 const AllProductsPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [filter, setFilter] = useState("All");
+  const [brands, setBrands] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [prices, setPrices] = useState([]);
   const { addToCart } = useCart();
 
   const categories = ["All", "Men", "Women", "Kids", "Accessories"];
-  
-  const filteredProducts = filter === "All" 
-    ? allProducts 
+
+  const filteredProducts = filter === "All"
+    ? allProducts
     : allProducts.filter(p => p.category === filter);
+
+  const toggle = (setter, arr, v) =>
+    setter(arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]);
+
+  const activeCount = brands.length + sizes.length + colors.length + prices.length;
+
+  const clearAll = () => {
+    setBrands([]); setSizes([]); setColors([]); setPrices([]);
+  };
 
   const handleAddToCart = () => {
     if (selectedProduct) {
@@ -56,13 +80,27 @@ const AllProductsPage = () => {
     }
   };
 
+  const Chip = ({ active, onClick, children }) => (
+    <motion.button
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className={`px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest border transition-all ${
+        active
+          ? "bg-primary text-primary-foreground border-primary neon-glow"
+          : "bg-secondary/50 text-muted-foreground border-border hover:border-primary hover:text-foreground"
+      }`}
+    >
+      {children}
+    </motion.button>
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4 lg:px-8">
-          {/* Back Button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -77,11 +115,10 @@ const AllProductsPage = () => {
             </Link>
           </motion.div>
 
-          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="text-center mb-10"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display mb-4">
               ALL <span className="text-gradient">PRODUCTS</span>
@@ -91,12 +128,12 @@ const AllProductsPage = () => {
             </p>
           </motion.div>
 
-          {/* Filter Tabs */}
+          {/* Category tabs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-wrap justify-center gap-3 mb-12"
+            className="flex flex-wrap justify-center gap-3 mb-8"
           >
             {categories.map((cat) => (
               <motion.button
@@ -113,6 +150,74 @@ const AllProductsPage = () => {
                 {cat}
               </motion.button>
             ))}
+          </motion.div>
+
+          {/* Filter chips panel */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-10 p-5 rounded-2xl border border-border bg-card/50"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs uppercase tracking-widest text-muted-foreground">
+                Refine {activeCount > 0 && <span className="text-primary">· {activeCount} active</span>}
+              </h3>
+              {activeCount > 0 && (
+                <button
+                  onClick={clearAll}
+                  className="text-xs uppercase tracking-widest text-primary hover:underline"
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground w-16">Brand</span>
+                {BRANDS.map((b) => (
+                  <Chip key={b} active={brands.includes(b)} onClick={() => toggle(setBrands, brands, b)}>
+                    {b}
+                  </Chip>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground w-16">Size</span>
+                {SIZES.map((s) => (
+                  <Chip key={s} active={sizes.includes(s)} onClick={() => toggle(setSizes, sizes, s)}>
+                    {s}
+                  </Chip>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground w-16">Price</span>
+                {PRICES.map((p) => (
+                  <Chip key={p} active={prices.includes(p)} onClick={() => toggle(setPrices, prices, p)}>
+                    {p}
+                  </Chip>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground w-16">Color</span>
+                {COLORS.map((c) => {
+                  const active = colors.includes(c.name);
+                  return (
+                    <motion.button
+                      key={c.name}
+                      onClick={() => toggle(setColors, colors, c.name)}
+                      whileHover={{ scale: 1.15 }}
+                      whileTap={{ scale: 0.9 }}
+                      className={`w-7 h-7 rounded-full ring-offset-2 ring-offset-card transition-all ${
+                        active ? "ring-2 ring-primary" : "ring-1 ring-border"
+                      }`}
+                      style={{ background: c.hex }}
+                      aria-label={c.name}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           </motion.div>
 
           {/* Products Grid */}
