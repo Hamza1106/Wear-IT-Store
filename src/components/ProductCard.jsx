@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Star, ShoppingBag, Eye, Heart, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
+
 
 const DEFAULT_COLORS = ["#0f0f0f", "#ff6a2b", "#f5f5f5"];
 const DEFAULT_SIZES = ["S", "M", "L", "XL"];
@@ -13,6 +15,8 @@ const ProductCard = ({ product, onQuickView }) => {
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
   const [added, setAdded] = useState(false);
+  const navigate = useNavigate();
+
   const { addToCart } = useCart();
 
   const colors = product.colors || DEFAULT_COLORS;
@@ -218,16 +222,21 @@ const ProductCard = ({ product, onQuickView }) => {
                 </span>
               )}
             </div>
-            <a
-              href="#"
+            <button
+              type="button"
               onClick={(e) => {
-                e.preventDefault();
-                onQuickView?.(product);
+                e.stopPropagation();
+                if (onQuickView) {
+                  onQuickView(product);
+                } else {
+                  navigate({ to: "/products" });
+                }
               }}
               className="text-[10px] uppercase tracking-widest text-primary hover:underline"
             >
               View →
-            </a>
+            </button>
+
           </div>
         </div>
       </div>
