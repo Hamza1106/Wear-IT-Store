@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
 import product3 from "@/assets/product-3.jpg";
@@ -144,45 +146,47 @@ const TrendingCarousel = () => {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="flex-shrink-0 w-72 lg:w-80"
           >
-            <motion.div
-              whileHover={{ y: -10 }}
-              className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer"
+            <Link
+              to="/products"
+              className="block"
             >
-              {/* Background Image */}
-              <img
-                src={collection.image}
-                alt={collection.title}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              
-              {/* Gradient Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-t ${collection.color} via-transparent to-transparent`} />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-              
-              {/* Content */}
-              <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                <motion.span
-                  initial={{ opacity: 0.7 }}
-                  className="text-sm text-muted-foreground uppercase tracking-wide"
-                >
-                  {collection.subtitle}
-                </motion.span>
-                <h3 className="text-2xl font-display text-foreground mt-1 mb-4">
-                  {collection.title}
-                </h3>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileHover={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-2 text-primary font-medium group-hover:opacity-100 opacity-0 transition-opacity duration-300"
-                >
-                  <span>Shop Now</span>
-                  <ArrowRight className="w-4 h-4" />
-                </motion.div>
-              </div>
+              <motion.div
+                whileHover={{ y: -10 }}
+                className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer"
+              >
+                {/* Background Image */}
+                <img
+                  src={collection.image}
+                  alt={collection.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
 
-              {/* Hover Border Effect */}
-              <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-primary/50 transition-colors duration-300" />
-            </motion.div>
+                {/* Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-t ${collection.color} via-transparent to-transparent`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+
+                {/* Content */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <motion.span
+                    initial={{ opacity: 0.7 }}
+                    className="text-sm text-muted-foreground uppercase tracking-wide"
+                  >
+                    {collection.subtitle}
+                  </motion.span>
+                  <h3 className="text-2xl font-display text-foreground mt-1 mb-4">
+                    {collection.title}
+                  </h3>
+                  <div className="flex items-center gap-2 text-primary font-medium opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                    <span>Shop Now</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+
+                {/* Hover Border Effect */}
+                <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-primary/50 transition-colors duration-300" />
+              </motion.div>
+            </Link>
+
           </motion.div>
         ))}
       </div>
