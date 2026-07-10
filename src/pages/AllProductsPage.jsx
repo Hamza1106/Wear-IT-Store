@@ -12,7 +12,7 @@ import { ALL_PRODUCTS, FILTER_COLORS } from "@/data/products";
 const allProducts = ALL_PRODUCTS;
 
 const BRANDS = ["Nike", "Adidas", "Puma", "Under Armour", "New Balance"];
-const SIZES = ["XS", "S", "M", "L", "XL"];
+const SIZES = ["XS", "S", "M", "L", "XL", "7", "8", "9", "10", "11"];
 const COLORS = FILTER_COLORS;
 const PRICES = [
   { label: "Under $50", test: (p) => p < 50 },

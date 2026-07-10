@@ -47,7 +47,6 @@ const C = PRODUCT_COLORS;
 export const FILTER_COLORS = [
   C.black,
   C.orange,
-  C.cyan,
   C.white,
   C.olive,
   C.navy,
