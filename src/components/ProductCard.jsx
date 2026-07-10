@@ -193,8 +193,9 @@ const ProductCard = ({ product, onQuickView }) => {
                 className={`w-4 h-4 rounded-full ring-offset-2 ring-offset-card transition-all ${
                   selectedColor === idx ? "ring-2 ring-primary" : ""
                 }`}
-                style={{ background: c }}
-                aria-label={`Color ${idx + 1}`}
+                style={{ background: c.hex }}
+                aria-label={c.name}
+
               />
             ))}
             <span className="text-[10px] text-muted-foreground ml-1">
