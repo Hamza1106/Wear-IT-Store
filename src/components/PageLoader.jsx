@@ -2,31 +2,34 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const WORDS = ["PERFORMANCE", "PRECISION", "POWER", "VELOCITY"];
+const LOADER_DURATION = 3600;
 
 const PageLoader = () => {
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return !sessionStorage.getItem("velocity_loaded");
-  });
+  const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [wordIdx, setWordIdx] = useState(0);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("velocity_loaded")) {
+      setVisible(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!visible) return;
     document.body.style.overflow = "hidden";
 
     const start = performance.now();
-    const DURATION = 2600;
     let raf;
     const tick = (t) => {
-      const p = Math.min(1, (t - start) / DURATION);
+      const p = Math.min(1, (t - start) / LOADER_DURATION);
       // easeOutCubic
       const eased = 1 - Math.pow(1 - p, 3);
       setProgress(eased * 100);
       if (p < 1) raf = requestAnimationFrame(tick);
       else {
         sessionStorage.setItem("velocity_loaded", "1");
-        setTimeout(() => setVisible(false), 350);
+        setTimeout(() => setVisible(false), 500);
       }
     };
     raf = requestAnimationFrame(tick);
@@ -49,7 +52,7 @@ const PageLoader = () => {
         <motion.div
           key="page-loader"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeInOut" } }}
+          exit={{ opacity: 0, transition: { duration: 0.75, ease: "easeInOut" } }}
           className="fixed inset-0 z-[10000] flex flex-col items-center justify-center overflow-hidden bg-background"
         >
           {/* animated ambient glow */}

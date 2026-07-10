@@ -5,74 +5,9 @@ import { X } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
-import product5 from "@/assets/product-5.jpg";
-import product6 from "@/assets/product-6.jpg";
+import { FEATURED_PRODUCT_IDS, getProductsByIds } from "@/data/products";
 
-const products = [
-  {
-    id: 1,
-    name: "Shadow Runner X",
-    price: 179,
-    image: product1,
-    rating: 4.8,
-    reviews: 256,
-    category: "Running",
-    isNew: true,
-  },
-  {
-    id: 2,
-    name: "Flame Tech Hoodie",
-    price: 129,
-    originalPrice: 159,
-    image: product2,
-    rating: 4.6,
-    reviews: 189,
-    category: "Training",
-  },
-  {
-    id: 3,
-    name: "Performance Leggings",
-    price: 89,
-    image: product3,
-    rating: 4.9,
-    reviews: 412,
-    category: "Women",
-    isNew: true,
-  },
-  {
-    id: 4,
-    name: "Elite Training Tee",
-    price: 59,
-    image: product4,
-    rating: 4.5,
-    reviews: 328,
-    category: "Men",
-  },
-  {
-    id: 5,
-    name: "Urban Snapback",
-    price: 45,
-    originalPrice: 55,
-    image: product5,
-    rating: 4.7,
-    reviews: 156,
-    category: "Accessories",
-  },
-  {
-    id: 6,
-    name: "Pro Gym Duffel",
-    price: 99,
-    image: product6,
-    rating: 4.8,
-    reviews: 203,
-    category: "Accessories",
-    isNew: true,
-  },
-];
+const products = getProductsByIds(FEATURED_PRODUCT_IDS);
 
 const FeaturedProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
