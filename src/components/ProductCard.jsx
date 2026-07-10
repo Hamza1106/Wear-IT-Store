@@ -84,6 +84,23 @@ const ProductCard = ({ product, onQuickView }) => {
             transition={{ duration: 0.5 }}
           />
 
+          {/* Color tint overlay (for products without dedicated variant images) */}
+          {showTint && (
+            <motion.div
+              key={activeColor.hex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.55 }}
+              transition={{ duration: 0.4 }}
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundColor: activeColor.hex,
+                mixBlendMode: "color",
+              }}
+            />
+          )}
+
+
+
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
