@@ -1,7 +1,27 @@
-import { useEffect, useRef, useState, Suspense } from "react";
+import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, Float, ContactShadows } from "@react-three/drei";
+import * as THREE from "three";
+import { useNavigate } from "@tanstack/react-router";
+import { useCart } from "@/context/CartContext";
+import { toast } from "sonner";
+import shadowImg from "@/assets/p-shadow-runner.jpg";
+
+/* ---------------- Shoe geometry helpers ---------------- */
+
+// Foot-shaped 2D outline used to extrude the sole/upper.
+const footShape = () => {
+  const s = new THREE.Shape();
+  // Heel -> outer side -> toe -> inner side -> heel
+  s.moveTo(-1.6, -0.5);
+  s.bezierCurveTo(-2.0, -0.55, -2.05, 0.35, -1.55, 0.55);
+  s.bezierCurveTo(-1.0, 0.7, 0.4, 0.72, 1.35, 0.55);
+  s.bezierCurveTo(1.9, 0.45, 2.15, 0.1, 2.1, -0.15);
+  s.bezierCurveTo(2.0, -0.55, 1.2, -0.62, 0.4, -0.6);
+  s.bezierCurveTo(-0.6, -0.6, -1.2, -0.6, -1.6, -0.5);
+  return s;
+};
 
 const ShoeModel = () => {
   const group = useRef(null);
@@ -9,55 +29,111 @@ const ShoeModel = () => {
     if (group.current) group.current.rotation.y += delta * 0.35;
   });
 
+  const shape = useMemo(() => footShape(), []);
+  const soleExtrude = useMemo(
+    () => ({ depth: 0.35, bevelEnabled: true, bevelSize: 0.08, bevelThickness: 0.08, bevelSegments: 4, steps: 1 }),
+    []
+  );
+  const midExtrude = useMemo(
+    () => ({ depth: 0.12, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 3, steps: 1 }),
+    []
+  );
+  const upperExtrude = useMemo(
+    () => ({ depth: 0.55, bevelEnabled: true, bevelSize: 0.18, bevelThickness: 0.18, bevelSegments: 6, steps: 1 }),
+    []
+  );
+
   return (
-    <group ref={group}>
-      {/* Sole */}
-      <mesh position={[0, -0.6, 0]} castShadow>
-        <boxGeometry args={[3, 0.35, 1.2]} />
-        <meshStandardMaterial color="#0f0f0f" roughness={0.4} metalness={0.2} />
+    <group ref={group} rotation={[Math.PI / 2, 0, 0]} position={[0, -0.2, 0]}>
+      {/* Outsole (black rubber) */}
+      <mesh castShadow receiveShadow position={[0, 0, -0.5]}>
+        <extrudeGeometry args={[shape, soleExtrude]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.9} metalness={0.05} />
       </mesh>
-      {/* Midsole glow */}
-      <mesh position={[0, -0.4, 0]}>
-        <boxGeometry args={[3.02, 0.08, 1.22]} />
+
+      {/* Midsole (glowing accent) */}
+      <mesh castShadow position={[0, 0, -0.12]} scale={[1.02, 1.02, 1]}>
+        <extrudeGeometry args={[shape, midExtrude]} />
         <meshStandardMaterial
           color="#ff6a2b"
           emissive="#ff6a2b"
-          emissiveIntensity={1.5}
+          emissiveIntensity={1.4}
+          roughness={0.4}
         />
       </mesh>
-      {/* Upper body (main) */}
-      <mesh position={[0.3, 0, 0]} castShadow>
-        <boxGeometry args={[2.4, 0.9, 1.05]} />
-        <meshStandardMaterial color="#ff6a2b" roughness={0.35} metalness={0.35} />
+
+      {/* Foam layer (white midsole) */}
+      <mesh castShadow position={[0, 0, 0]} scale={[0.98, 0.98, 1]}>
+        <extrudeGeometry args={[shape, { ...midExtrude, depth: 0.18 }]} />
+        <meshStandardMaterial color="#f2f2f2" roughness={0.5} />
       </mesh>
-      {/* Toe */}
-      <mesh position={[-1.15, -0.15, 0]} castShadow>
-        <sphereGeometry args={[0.55, 32, 32]} />
-        <meshStandardMaterial color="#ff6a2b" roughness={0.35} metalness={0.35} />
+
+      {/* Upper (knit body) — extruded up from foot shape, scaled to taper */}
+      <group position={[0, 0, 0.2]}>
+        <mesh castShadow scale={[0.9, 0.85, 1]}>
+          <extrudeGeometry args={[shape, upperExtrude]} />
+          <meshStandardMaterial color="#151515" roughness={0.75} metalness={0.15} />
+        </mesh>
+      </group>
+
+      {/* Toe cap (rounded) */}
+      <mesh castShadow position={[-1.35, 0, 0.45]} rotation={[Math.PI / 2, 0, 0]}>
+        <sphereGeometry args={[0.55, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.6} metalness={0.2} />
       </mesh>
-      {/* Heel */}
-      <mesh position={[1.35, 0.15, 0]} castShadow>
-        <sphereGeometry args={[0.6, 32, 32]} />
-        <meshStandardMaterial color="#141414" roughness={0.4} metalness={0.3} />
+
+      {/* Heel counter */}
+      <mesh castShadow position={[1.75, 0, 0.55]} rotation={[Math.PI / 2, 0, 0]}>
+        <sphereGeometry args={[0.55, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color="#0f0f0f" roughness={0.4} metalness={0.35} />
       </mesh>
-      {/* Tongue / collar */}
-      <mesh position={[0.7, 0.55, 0]} castShadow>
-        <boxGeometry args={[0.9, 0.5, 0.9]} />
-        <meshStandardMaterial color="#1a1a1a" roughness={0.6} />
+
+      {/* Tongue */}
+      <mesh castShadow position={[0.4, 0, 0.85]} rotation={[-0.2, 0, 0]}>
+        <boxGeometry args={[1.1, 0.7, 0.2]} />
+        <meshStandardMaterial color="#1c1c1c" roughness={0.8} />
       </mesh>
-      {/* Laces panel */}
-      <mesh position={[0.1, 0.4, 0]} castShadow>
-        <boxGeometry args={[1.2, 0.1, 0.6]} />
-        <meshStandardMaterial color="#f5f5f5" roughness={0.5} />
+
+      {/* Collar (ankle opening trim) */}
+      <mesh castShadow position={[1.15, 0, 0.95]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.42, 0.09, 16, 32]} />
+        <meshStandardMaterial color="#ff6a2b" emissive="#ff6a2b" emissiveIntensity={0.6} />
       </mesh>
-      {/* Swoosh accent */}
-      <mesh position={[0, 0.05, 0.55]} rotation={[0, 0, -0.25]} castShadow>
-        <boxGeometry args={[1.6, 0.18, 0.05]} />
+
+      {/* Laces — series of thin bars */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <mesh key={i} castShadow position={[0.9 - i * 0.28, 0, 0.9]} rotation={[0, 0, 0]}>
+          <boxGeometry args={[0.05, 0.55, 0.05]} />
+          <meshStandardMaterial color="#e8e8e8" roughness={0.4} />
+        </mesh>
+      ))}
+
+      {/* Side swoosh / accent stripe */}
+      <mesh castShadow position={[0.1, 0.62, 0.5]} rotation={[0, 0, -0.35]}>
+        <boxGeometry args={[1.9, 0.04, 0.28]} />
         <meshStandardMaterial
-          color="#22d3ee"
-          emissive="#22d3ee"
-          emissiveIntensity={0.8}
+          color="#ff6a2b"
+          emissive="#ff6a2b"
+          emissiveIntensity={0.9}
+          metalness={0.4}
+          roughness={0.3}
         />
+      </mesh>
+      <mesh castShadow position={[0.1, -0.62, 0.5]} rotation={[0, 0, 0.35]}>
+        <boxGeometry args={[1.9, 0.04, 0.28]} />
+        <meshStandardMaterial
+          color="#ff6a2b"
+          emissive="#ff6a2b"
+          emissiveIntensity={0.9}
+          metalness={0.4}
+          roughness={0.3}
+        />
+      </mesh>
+
+      {/* Heel logo tab */}
+      <mesh castShadow position={[1.85, 0, 0.4]}>
+        <boxGeometry args={[0.05, 0.4, 0.2]} />
+        <meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={1.1} />
       </mesh>
     </group>
   );
@@ -65,7 +141,24 @@ const ShoeModel = () => {
 
 const Featured3D = () => {
   const [mounted, setMounted] = useState(false);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+
   useEffect(() => setMounted(true), []);
+
+  const shopProduct = {
+    id: 1,
+    name: "Shadow Runner X",
+    price: 179,
+    image: shadowImg,
+    category: "Men",
+  };
+
+  const handleShop = () => {
+    addToCart(shopProduct);
+    toast.success("Shadow Runner X added to cart");
+    navigate({ to: "/products" });
+  };
 
   return (
     <section className="py-24 lg:py-32 relative overflow-hidden gradient-hero">
@@ -88,21 +181,22 @@ const Featured3D = () => {
               <Canvas
                 shadows
                 dpr={[1, 2]}
-                camera={{ position: [0, 1.5, 6], fov: 40 }}
+                camera={{ position: [0, 2, 6.5], fov: 38 }}
               >
-                <ambientLight intensity={0.4} />
-                <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
-                <pointLight position={[-5, 3, -5]} intensity={0.8} color="#22d3ee" />
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[5, 5, 5]} intensity={1.3} castShadow />
+                <pointLight position={[-5, 3, -5]} intensity={0.9} color="#22d3ee" />
+                <pointLight position={[3, -2, 4]} intensity={0.7} color="#ff6a2b" />
                 <Suspense fallback={null}>
-                  <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.6}>
+                  <Float speed={1.3} rotationIntensity={0.15} floatIntensity={0.5}>
                     <ShoeModel />
                   </Float>
                   <ContactShadows
                     position={[0, -1.1, 0]}
-                    opacity={0.5}
-                    scale={8}
-                    blur={2.5}
-                    far={2}
+                    opacity={0.55}
+                    scale={9}
+                    blur={2.6}
+                    far={2.2}
                   />
                   <Environment preset="city" />
                 </Suspense>
@@ -115,7 +209,7 @@ const Featured3D = () => {
                 />
               </Canvas>
             )}
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground pointer-events-none">
               <span>◉ Drag to rotate</span>
               <span>3D preview</span>
             </div>
@@ -160,6 +254,7 @@ const Featured3D = () => {
 
             <div className="flex items-center gap-4">
               <motion.button
+                onClick={handleShop}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="gradient-neon text-primary-foreground px-8 py-4 font-semibold uppercase tracking-wide rounded-full neon-glow"
