@@ -51,7 +51,8 @@ const ProductCard = ({ product, onQuickView }) => {
         <div className="relative aspect-[4/5] overflow-hidden bg-secondary">
           {/* Primary image */}
           <motion.img
-            src={product.image}
+            key={activeImage}
+            src={activeImage}
             alt={product.name}
             className="absolute inset-0 w-full h-full object-cover"
             animate={{ opacity: isHovered ? 0 : 1, scale: isHovered ? 1.05 : 1 }}
@@ -66,6 +67,7 @@ const ProductCard = ({ product, onQuickView }) => {
             animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.5 }}
           />
+
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
