@@ -30,22 +30,7 @@ const ProductCard = ({ product, onQuickView }) => {
   const sizes = product.sizes || DEFAULT_SIZES;
   const activeColor = colors[selectedColor] || colors[0];
   const activeImage = activeColor?.image || product.image;
-  const hoverImage = product.hoverImage || activeImage;
-
-  // If this color has no distinct variant image, apply a tint overlay so the
-  // swatch actually changes the visual. Skip for near-neutral (black/white/gray)
-  // and skip when the product ships true variant images per color.
-  const hex = (activeColor?.hex || "").replace("#", "");
-  const r = parseInt(hex.slice(0, 2), 16) || 0;
-  const g = parseInt(hex.slice(2, 4), 16) || 0;
-  const b = parseInt(hex.slice(4, 6), 16) || 0;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const saturation = max === 0 ? 0 : (max - min) / max;
-  const distinctVariant = colors.some(
-    (c) => c.image && c.image !== product.image
-  );
-  const showTint = !distinctVariant && saturation > 0.25;
+  const hoverImage = activeColor?.hoverImage || activeImage;
 
 
   const handleAddToCart = (e) => {
@@ -83,24 +68,6 @@ const ProductCard = ({ product, onQuickView }) => {
             animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.5 }}
           />
-
-          {/* Color tint overlay (for products without dedicated variant images) */}
-          {showTint && (
-            <motion.div
-              key={activeColor.hex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.55 }}
-              transition={{ duration: 0.4 }}
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                backgroundColor: activeColor.hex,
-                mixBlendMode: "color",
-              }}
-            />
-          )}
-
-
-
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
