@@ -6,8 +6,15 @@ import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 
 
-const DEFAULT_COLORS = ["#0f0f0f", "#ff6a2b", "#f5f5f5"];
+const DEFAULT_COLORS = [
+  { name: "Black", hex: "#0f0f0f" },
+  { name: "Orange", hex: "#ff6a2b" },
+  { name: "White", hex: "#f5f5f5" },
+];
 const DEFAULT_SIZES = ["S", "M", "L", "XL"];
+
+const normalizeColor = (c) =>
+  typeof c === "string" ? { name: c, hex: c } : c;
 
 const ProductCard = ({ product, onQuickView }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -19,9 +26,11 @@ const ProductCard = ({ product, onQuickView }) => {
 
   const { addToCart } = useCart();
 
-  const colors = product.colors || DEFAULT_COLORS;
+  const colors = (product.colors || DEFAULT_COLORS).map(normalizeColor);
   const sizes = product.sizes || DEFAULT_SIZES;
-  const hoverImage = product.hoverImage || product.image;
+  const activeImage = colors[selectedColor]?.image || product.image;
+  const hoverImage = product.hoverImage || activeImage;
+
 
   const handleAddToCart = (e) => {
     e?.stopPropagation();
