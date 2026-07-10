@@ -5,39 +5,13 @@ import Navbar from "@/components/Navbar";
 import LoginModal from "@/components/LoginModal";
 import ProductCard from "@/components/ProductCard";
 import Footer from "@/components/Footer";
-
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
-import product5 from "@/assets/product-5.jpg";
-import product6 from "@/assets/product-6.jpg";
+import { ALL_PRODUCTS } from "@/data/products";
 
 const categoryProducts = {
-  men: [
-    { id: 101, name: "Sport Runner Pro", price: 149.99, image: product1, category: "Men's Running", rating: 4.8, reviews: 234, isNew: true },
-    { id: 102, name: "Urban Street Max", price: 129.99, image: product2, category: "Men's Lifestyle", rating: 4.6, reviews: 189 },
-    { id: 103, name: "Training Force X", price: 119.99, originalPrice: 149.99, image: product3, category: "Men's Training", rating: 4.7, reviews: 156 },
-    { id: 104, name: "Basketball Elite", price: 179.99, image: product4, category: "Men's Basketball", rating: 4.9, reviews: 312, isNew: true },
-  ],
-  women: [
-    { id: 201, name: "Yoga Flow Lite", price: 99.99, image: product5, category: "Women's Yoga", rating: 4.9, reviews: 287, isNew: true },
-    { id: 202, name: "Running Swift", price: 139.99, image: product6, category: "Women's Running", rating: 4.7, reviews: 198 },
-    { id: 203, name: "Lifestyle Flex", price: 109.99, originalPrice: 139.99, image: product1, category: "Women's Lifestyle", rating: 4.5, reviews: 145 },
-    { id: 204, name: "Training Edge", price: 124.99, image: product2, category: "Women's Training", rating: 4.8, reviews: 223 },
-  ],
-  kids: [
-    { id: 301, name: "Junior Runner", price: 69.99, image: product3, category: "Kids Running", rating: 4.6, reviews: 134, isNew: true },
-    { id: 302, name: "Playground Pro", price: 59.99, image: product4, category: "Kids Lifestyle", rating: 4.8, reviews: 167 },
-    { id: 303, name: "School Sport", price: 54.99, originalPrice: 74.99, image: product5, category: "Kids Training", rating: 4.5, reviews: 98 },
-    { id: 304, name: "Active Play Max", price: 64.99, image: product6, category: "Kids Active", rating: 4.7, reviews: 112 },
-  ],
-  accessories: [
-    { id: 401, name: "Sport Backpack Pro", price: 89.99, image: product1, category: "Bags", rating: 4.7, reviews: 189, isNew: true },
-    { id: 402, name: "Performance Cap", price: 34.99, image: product2, category: "Caps", rating: 4.5, reviews: 245 },
-    { id: 403, name: "Elite Sport Socks", price: 19.99, originalPrice: 29.99, image: product3, category: "Socks", rating: 4.8, reviews: 312 },
-    { id: 404, name: "Training Gym Bag", price: 79.99, image: product4, category: "Bags", rating: 4.6, reviews: 156 },
-  ],
+  men: ALL_PRODUCTS.filter((product) => product.category === "Men"),
+  women: ALL_PRODUCTS.filter((product) => product.category === "Women"),
+  kids: ALL_PRODUCTS.filter((product) => product.category === "Kids"),
+  accessories: ALL_PRODUCTS.filter((product) => product.category === "Accessories"),
 };
 
 const categoryTitles = {

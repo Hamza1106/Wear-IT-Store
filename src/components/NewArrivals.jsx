@@ -1,65 +1,8 @@
 import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
-import product1 from "@/assets/product-1.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product6 from "@/assets/product-6.jpg";
-import product2 from "@/assets/product-2.jpg";
+import { NEW_ARRIVAL_IDS, getProductsByIds } from "@/data/products";
 
-const newArrivals = [
-  {
-    id: 101,
-    name: "Shadow Runner X",
-    price: 179,
-    image: product1,
-    hoverImage: product2,
-    rating: 4.8,
-    reviews: 256,
-    category: "Running",
-    isNew: true,
-    colors: ["#ff6a2b", "#0f0f0f", "#f5f5f5"],
-    sizes: ["7", "8", "9", "10", "11"],
-  },
-  {
-    id: 102,
-    name: "Performance Leggings",
-    price: 89,
-    image: product3,
-    hoverImage: product1,
-    rating: 4.9,
-    reviews: 412,
-    category: "Women",
-    isNew: true,
-    colors: ["#0f0f0f", "#22d3ee", "#ff6a2b"],
-    sizes: ["XS", "S", "M", "L"],
-  },
-  {
-    id: 103,
-    name: "Pro Gym Duffel",
-    price: 99,
-    image: product6,
-    hoverImage: product3,
-    rating: 4.8,
-    reviews: 203,
-    category: "Accessories",
-    isNew: true,
-    colors: ["#0f0f0f", "#ff6a2b"],
-    sizes: ["One Size"],
-  },
-  {
-    id: 104,
-    name: "Flame Tech Hoodie",
-    price: 129,
-    originalPrice: 159,
-    image: product2,
-    hoverImage: product6,
-    rating: 4.6,
-    reviews: 189,
-    category: "Training",
-    isNew: true,
-    colors: ["#ff6a2b", "#0f0f0f", "#22d3ee"],
-    sizes: ["S", "M", "L", "XL"],
-  },
-];
+const newArrivals = getProductsByIds(NEW_ARRIVAL_IDS);
 
 const NewArrivals = () => {
   return (
