@@ -146,6 +146,7 @@ function RootComponent() {
             <SmoothScroll>
               <CustomCursor />
               <SearchCommand />
+              <PageLoader />
               <Toaster />
               <Outlet />
             </SmoothScroll>
