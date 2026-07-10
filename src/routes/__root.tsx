@@ -18,6 +18,7 @@ import { Toaster } from "@/components/ui/sonner";
 import SmoothScroll from "@/components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
 import SearchCommand from "@/components/SearchCommand";
+import PageLoader from "@/components/PageLoader";
 
 function NotFoundComponent() {
   return (
