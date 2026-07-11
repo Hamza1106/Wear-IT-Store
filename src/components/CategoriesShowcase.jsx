@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
+import catKids from "@/assets/cat-kids.jpg";
 import product5 from "@/assets/product-5.jpg";
 
 const categories = [
@@ -20,7 +20,7 @@ const categories = [
     label: "Women",
     tag: "38 pieces",
     blurb: "Studio-to-street silhouettes with signature stretch.",
-    image: hero3,
+    image: hero2,
     className: "lg:col-span-2 min-h-[280px]",
   },
   {
@@ -28,7 +28,7 @@ const categories = [
     label: "Kids",
     tag: "24 pieces",
     blurb: "Playground proof. Built to keep up.",
-    image: hero2,
+    image: catKids,
     className: "min-h-[280px]",
   },
   {
