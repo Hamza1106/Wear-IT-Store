@@ -1,33 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Command } from "cmdk";
-import { Search, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { Search, ArrowRight, TrendingUp, LayoutGrid } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-
-const catalog = [
-  { name: "Shadow Runner X", category: "Men · Running", href: "/category/men" },
-  { name: "Flame Tech Hoodie", category: "Men · Training", href: "/category/men" },
-  { name: "Elite Training Tee", category: "Men · Training", href: "/category/men" },
-  { name: "Performance Leggings", category: "Women · Bottoms", href: "/category/women" },
-  { name: "Zen Yoga Top", category: "Women · Yoga", href: "/category/women" },
-  { name: "Swift Run Jacket", category: "Women · Outerwear", href: "/category/women" },
-  { name: "Junior Sprint Shoes", category: "Kids · Shoes", href: "/category/kids" },
-  { name: "Urban Snapback", category: "Accessories · Caps", href: "/category/accessories" },
-  { name: "Pro Gym Duffel", category: "Accessories · Bags", href: "/category/accessories" },
-];
+import { ALL_PRODUCTS } from "@/data/products";
 
 const quickLinks = [
-  { label: "All Products", href: "/products" },
-  { label: "Men", href: "/category/men" },
-  { label: "Women", href: "/category/women" },
-  { label: "Kids", href: "/category/kids" },
-  { label: "Accessories", href: "/category/accessories" },
+  { label: "All Products", href: "/products", keywords: "shop all catalog" },
+  { label: "Men", href: "/category/men", keywords: "male mens" },
+  { label: "Women", href: "/category/women", keywords: "female womens" },
+  { label: "Kids", href: "/category/kids", keywords: "children youth junior" },
+  { label: "Accessories", href: "/category/accessories", keywords: "gear bag cap sock bottle" },
 ];
 
-const trending = ["Shadow Runner", "Leggings", "Hoodie", "Duffel", "Snapback"];
+const trending = ["Shadow Runner", "Leggings", "Hoodie", "Duffel", "Yoga Top"];
+
+const categorySlug = (cat) => cat.toLowerCase();
 
 const SearchCommand = () => {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,6 +38,25 @@ const SearchCommand = () => {
       window.removeEventListener("velocity:open-search", openEvt);
     };
   }, []);
+
+  useEffect(() => {
+    if (!open) setQuery("");
+  }, [open]);
+
+  const products = useMemo(
+    () =>
+      ALL_PRODUCTS.map((p) => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        brand: p.brand,
+        price: p.price,
+        image: p.image,
+        colorNames: (p.colors || []).map((c) => c.name).join(" "),
+        href: `/category/${categorySlug(p.category)}`,
+      })),
+    []
+  );
 
   const go = (href) => {
     setOpen(false);
@@ -70,12 +81,14 @@ const SearchCommand = () => {
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-2xl bg-card border border-border rounded-2xl overflow-hidden card-shadow"
           >
-            <Command loop>
+            <Command loop shouldFilter={true}>
               <div className="flex items-center gap-3 px-5 border-b border-border">
                 <Search className="w-5 h-5 text-muted-foreground shrink-0" />
                 <Command.Input
                   autoFocus
-                  placeholder="Search products, categories, colors..."
+                  value={query}
+                  onValueChange={setQuery}
+                  placeholder="Search products, brands, categories, colors..."
                   className="flex-1 py-5 bg-transparent outline-none text-base placeholder:text-muted-foreground"
                 />
                 <kbd className="hidden sm:inline text-xs px-2 py-1 rounded bg-secondary text-muted-foreground">
@@ -84,45 +97,88 @@ const SearchCommand = () => {
               </div>
 
               <Command.List className="max-h-[60vh] overflow-y-auto p-3">
-                <Command.Empty className="py-8 text-center text-sm text-muted-foreground">
-                  No matches. Try "runner", "hoodie", or "leggings".
+                <Command.Empty className="py-10 text-center">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    No matches for "{query}".
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {trending.map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setQuery(t)}
+                        className="text-xs px-3 py-1.5 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
                 </Command.Empty>
+
+                {!query && (
+                  <Command.Group
+                    heading="Trending"
+                    className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-muted-foreground"
+                  >
+                    {trending.map((t) => (
+                      <Command.Item
+                        key={t}
+                        value={`trending ${t}`}
+                        onSelect={() => setQuery(t)}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer data-[selected=true]:bg-secondary transition-colors"
+                      >
+                        <TrendingUp className="w-4 h-4 text-primary" />
+                        <span className="text-sm">{t}</span>
+                      </Command.Item>
+                    ))}
+                  </Command.Group>
+                )}
 
                 <Command.Group
                   heading="Products"
                   className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-muted-foreground"
                 >
-                  {catalog.map((p) => (
+                  {products.map((p) => (
                     <Command.Item
-                      key={p.name}
-                      value={`${p.name} ${p.category}`}
+                      key={p.id}
+                      value={`${p.name} ${p.category} ${p.brand} ${p.colorNames}`}
                       onSelect={() => go(p.href)}
-                      className="flex items-center justify-between gap-3 px-3 py-3 rounded-lg cursor-pointer data-[selected=true]:bg-secondary transition-colors"
+                      className="flex items-center gap-3 px-2 py-2 rounded-lg cursor-pointer data-[selected=true]:bg-secondary transition-colors"
                     >
-                      <div>
-                        <div className="font-medium">{p.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {p.category}
+                      <img
+                        src={p.image}
+                        alt=""
+                        loading="lazy"
+                        className="w-11 h-11 rounded-md object-cover bg-secondary shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">
+                          {p.name}
+                        </div>
+                        <div className="text-[11px] text-muted-foreground truncate">
+                          {p.brand} · {p.category}
                         </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-primary" />
+                      <div className="text-sm font-semibold text-primary shrink-0">
+                        ${p.price}
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
                     </Command.Item>
                   ))}
                 </Command.Group>
 
                 <Command.Group
-                  heading="Quick Links"
+                  heading="Categories"
                   className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-muted-foreground"
                 >
                   {quickLinks.map((l) => (
                     <Command.Item
                       key={l.label}
-                      value={l.label}
+                      value={`${l.label} ${l.keywords}`}
                       onSelect={() => go(l.href)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer data-[selected=true]:bg-secondary transition-colors"
                     >
-                      <Sparkles className="w-4 h-4 text-primary" />
-                      {l.label}
+                      <LayoutGrid className="w-4 h-4 text-primary" />
+                      <span className="text-sm">{l.label}</span>
                     </Command.Item>
                   ))}
                 </Command.Group>
@@ -130,22 +186,12 @@ const SearchCommand = () => {
 
               <div className="border-t border-border px-4 py-3 flex items-center justify-between text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="w-3.5 h-3.5" />
-                  <span>Trending:</span>
-                  <div className="hidden sm:flex gap-1.5">
-                    {trending.slice(0, 3).map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-0.5 rounded-full bg-secondary"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  <span>{products.length} products indexed</span>
                 </div>
                 <div className="flex items-center gap-1.5">
+                  <kbd className="px-1.5 py-0.5 rounded bg-secondary">↑↓</kbd>
                   <kbd className="px-1.5 py-0.5 rounded bg-secondary">↵</kbd>
-                  <span>to select</span>
+                  <span>navigate</span>
                 </div>
               </div>
             </Command>
