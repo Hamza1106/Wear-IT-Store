@@ -206,7 +206,7 @@ const Featured3D = () => {
                 <pointLight position={[3, -2, 4]} intensity={0.7} color="#ff6a2b" />
                 <Suspense fallback={null}>
                   <Float speed={1.3} rotationIntensity={0.15} floatIntensity={0.5}>
-                    <ShoeModel />
+                    <CustomShoeModel />
                   </Float>
                   <ContactShadows
                     position={[0, -1.1, 0]}
