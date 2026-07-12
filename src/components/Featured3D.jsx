@@ -214,7 +214,9 @@ const Featured3D = () => {
             {mounted && (
               <Canvas
                 shadows
-                dpr={[1, 2]}
+                dpr={[1, 1.5]}
+                gl={{ antialias: true, powerPreference: "high-performance" }}
+                performance={{ min: 0.5 }}
                 camera={{ position: [0, 2, 6.5], fov: 38 }}
               >
                 <ambientLight intensity={0.5} />
