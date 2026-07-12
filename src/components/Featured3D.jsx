@@ -217,7 +217,7 @@ const Featured3D = () => {
                 dpr={[1, 1.5]}
                 gl={{ antialias: true, powerPreference: "high-performance" }}
                 performance={{ min: 0.5 }}
-                camera={{ position: [0, 2, 6.5], fov: 38 }}
+                camera={{ position: [0, 1.2, 5.5], fov: 35 }}
               >
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[5, 5, 5]} intensity={1.3} castShadow />
