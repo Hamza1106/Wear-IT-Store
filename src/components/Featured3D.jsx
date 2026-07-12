@@ -209,7 +209,7 @@ const Featured3D = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden border border-border bg-gradient-to-br from-card to-background order-2 lg:order-1"
+            className="relative aspect-[4/3] lg:aspect-[5/4] rounded-3xl overflow-hidden border border-border bg-gradient-to-br from-card to-background order-2 lg:order-1"
           >
             {mounted && (
               <Canvas
