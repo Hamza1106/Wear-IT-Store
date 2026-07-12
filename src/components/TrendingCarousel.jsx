@@ -78,6 +78,21 @@ const TrendingCarousel = () => {
     }
   };
 
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const id = setInterval(() => {
+      if (!scrollRef.current) return;
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      if (scrollLeft >= scrollWidth - clientWidth - 10) {
+        scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        scrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
+      }
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section className="py-20 lg:py-32 gradient-hero overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
