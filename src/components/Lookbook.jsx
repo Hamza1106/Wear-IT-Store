@@ -90,7 +90,7 @@ const Lookbook = () => {
                 params={{ category: s.slug }}
                 className="block absolute inset-0"
               >
-                <motion.img
+                <motion.img loading="lazy" decoding="async"
                   src={s.image}
                   alt={s.title}
                   className="absolute inset-0 w-full h-full object-cover"

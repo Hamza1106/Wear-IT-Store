@@ -86,7 +86,7 @@ const CategoriesShowcase = () => {
                 params={{ category: cat.slug }}
                 className="block absolute inset-0"
               >
-                <motion.img
+                <motion.img loading="lazy" decoding="async"
                   src={cat.image}
                   alt={cat.label}
                   className="absolute inset-0 w-full h-full object-cover"

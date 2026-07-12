@@ -50,7 +50,7 @@ const InstagramFeed = () => {
               transition={{ duration: 0.4, delay: i * 0.06 }}
               className="group relative aspect-square overflow-hidden rounded-xl"
             >
-              <motion.img
+              <motion.img loading="lazy" decoding="async"
                 src={p.image}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"

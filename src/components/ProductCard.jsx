@@ -51,7 +51,7 @@ const ProductCard = ({ product, onQuickView }) => {
         {/* Image area */}
         <div className="relative aspect-[4/5] overflow-hidden bg-secondary">
           {/* Primary image */}
-          <motion.img
+          <motion.img loading="lazy" decoding="async"
             key={activeImage}
             src={activeImage}
             alt={product.name}
@@ -60,7 +60,7 @@ const ProductCard = ({ product, onQuickView }) => {
             transition={{ duration: 0.5 }}
           />
           {/* Hover image */}
-          <motion.img
+          <motion.img loading="lazy" decoding="async"
             src={hoverImage}
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
