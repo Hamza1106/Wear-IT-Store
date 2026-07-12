@@ -35,7 +35,7 @@ const CustomShoeModel = () => {
     return { object: cloned, scale: s };
   }, [scene]);
   return (
-    <group ref={group} position={[0, -0.4, 0]}>
+    <group ref={group} position={[0, -0.1, 0]}>
       <primitive object={object} scale={scale} />
     </group>
   );
@@ -195,7 +195,7 @@ const Featured3D = () => {
   };
 
   return (
-    <section className="py-24 lg:py-32 relative overflow-hidden gradient-hero">
+    <section className="py-16 lg:py-20 relative overflow-hidden gradient-hero">
       <div className="absolute inset-0 opacity-40">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent/20 rounded-full blur-3xl" />
@@ -209,7 +209,7 @@ const Featured3D = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden border border-border bg-gradient-to-br from-card to-background order-2 lg:order-1"
+            className="relative aspect-[4/3] lg:aspect-[5/4] rounded-3xl overflow-hidden border border-border bg-gradient-to-br from-card to-background order-2 lg:order-1"
           >
             {mounted && (
               <Canvas
@@ -217,7 +217,7 @@ const Featured3D = () => {
                 dpr={[1, 1.5]}
                 gl={{ antialias: true, powerPreference: "high-performance" }}
                 performance={{ min: 0.5 }}
-                camera={{ position: [0, 2, 6.5], fov: 38 }}
+                camera={{ position: [0, 1.2, 5.5], fov: 35 }}
               >
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[5, 5, 5]} intensity={1.3} castShadow />
