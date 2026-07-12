@@ -1,12 +1,29 @@
 import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, Float, ContactShadows } from "@react-three/drei";
+import { OrbitControls, Environment, Float, ContactShadows, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { useNavigate } from "@tanstack/react-router";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 import shadowImg from "@/assets/p-shadow-runner.jpg";
+
+const SHOE_MODEL_URL = "/models/shoe_model.glb";
+
+const CustomShoeModel = () => {
+  const group = useRef(null);
+  const { scene } = useGLTF(SHOE_MODEL_URL);
+  useFrame((_, delta) => {
+    if (group.current) group.current.rotation.y += delta * 0.35;
+  });
+  const cloned = useMemo(() => scene.clone(true), [scene]);
+  return (
+    <group ref={group} position={[0, -0.6, 0]}>
+      <primitive object={cloned} scale={2.2} />
+    </group>
+  );
+};
+useGLTF.preload(SHOE_MODEL_URL);
 
 /* ---------------- Shoe geometry helpers ---------------- */
 
