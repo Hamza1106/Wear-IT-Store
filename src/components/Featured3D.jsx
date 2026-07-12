@@ -16,10 +16,27 @@ const CustomShoeModel = () => {
   useFrame((_, delta) => {
     if (group.current) group.current.rotation.y += delta * 0.35;
   });
-  const cloned = useMemo(() => scene.clone(true), [scene]);
+  const { object, scale } = useMemo(() => {
+    const cloned = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(cloned);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const s = 2.6 / maxDim; // fit largest dimension to ~2.6 units
+    cloned.position.sub(center);
+    cloned.traverse((o) => {
+      if (o.isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+      }
+    });
+    return { object: cloned, scale: s };
+  }, [scene]);
   return (
-    <group ref={group} position={[0, -0.6, 0]}>
-      <primitive object={cloned} scale={2.2} />
+    <group ref={group} position={[0, -0.4, 0]}>
+      <primitive object={object} scale={scale} />
     </group>
   );
 };
@@ -197,7 +214,9 @@ const Featured3D = () => {
             {mounted && (
               <Canvas
                 shadows
-                dpr={[1, 2]}
+                dpr={[1, 1.5]}
+                gl={{ antialias: true, powerPreference: "high-performance" }}
+                performance={{ min: 0.5 }}
                 camera={{ position: [0, 2, 6.5], fov: 38 }}
               >
                 <ambientLight intensity={0.5} />

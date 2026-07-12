@@ -114,7 +114,7 @@ const FeaturedProducts = () => {
 
               <div className="grid md:grid-cols-2">
                 <div className="aspect-square">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={selectedProduct.image}
                     alt={selectedProduct.name}
                     className="w-full h-full object-cover"
