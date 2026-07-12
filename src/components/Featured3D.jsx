@@ -195,7 +195,7 @@ const Featured3D = () => {
   };
 
   return (
-    <section className="py-24 lg:py-32 relative overflow-hidden gradient-hero">
+    <section className="py-16 lg:py-20 relative overflow-hidden gradient-hero">
       <div className="absolute inset-0 opacity-40">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent/20 rounded-full blur-3xl" />
