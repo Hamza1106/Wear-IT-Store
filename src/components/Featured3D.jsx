@@ -35,7 +35,7 @@ const CustomShoeModel = () => {
     return { object: cloned, scale: s };
   }, [scene]);
   return (
-    <group ref={group} position={[0, -0.4, 0]}>
+    <group ref={group} position={[0, -0.1, 0]}>
       <primitive object={object} scale={scale} />
     </group>
   );
