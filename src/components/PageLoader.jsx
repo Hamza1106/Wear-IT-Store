@@ -109,7 +109,7 @@ const PageLoader = () => {
             >
               <div className="w-20 h-20 rounded-2xl border border-primary/40 flex items-center justify-center backdrop-blur-sm bg-background/40">
                 <span className="font-display text-3xl text-gradient tracking-tight">
-                  V
+                  W
                 </span>
               </div>
               <motion.div
@@ -127,7 +127,7 @@ const PageLoader = () => {
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
                 className="font-display text-5xl md:text-7xl tracking-[0.15em] text-foreground"
               >
-                VELOCITY <span className="text-gradient">WEAR</span>
+                WEAR <span className="text-gradient">IT</span>
               </motion.h1>
             </div>
 
