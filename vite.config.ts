@@ -1,9 +1,13 @@
 import { defineConfig } from "vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
+// Standard client-only Vite SPA configuration.
+// TanStack Start's SSR plugin has been removed entirely; the TanStack Router
+// vite plugin is kept only for file-based route generation (routeTree.gen.ts),
+// which works the same way in a pure client-side SPA.
 export default defineConfig({
   server: {
     port: 3000,
@@ -12,11 +16,17 @@ export default defineConfig({
     tsConfigPaths({
       projects: ["./tsconfig.json"],
     }),
-    tailwindcss(),
-    tanstackStart({
-      
-     
+    tanstackRouter({
+      target: "react",
+      autoCodeSplitting: true,
+      routesDirectory: "./src/routes",
+      generatedRouteTree: "./src/routeTree.gen.ts",
     }),
+    tailwindcss(),
     viteReact(),
   ],
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+  },
 });
